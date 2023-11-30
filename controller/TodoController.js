@@ -1,4 +1,5 @@
 const Reminder = require("../models/reminder");
+const mailconfig = require("../config/mailConfig")
 const bcrypt = require("bcrypt");
 const crypto = require("crypto")
 const Joi = require("joi")
@@ -17,8 +18,8 @@ const validation = (data) => {
 
 const sendEmail = async (toEmail, msg, note) => {
     let transporter = nodemailer.createTransport({
-        host: 'smtp.gmail.com',
-        port: 587,
+        host: mailconfig.HOST,
+        port: mailconfig.PORT,
         secure: false,
         auth: {
             user: 'sangdoan123456789@gmail.com',
