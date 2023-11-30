@@ -4,6 +4,7 @@ const app = express();
 const cors = require("cors");
 const connection = require("./db");
 const webRouter = require("./routes/router")
+// const SetInterval = require("./controller/TodoController")
 require('dotenv').config()
 // database connection
 connection();
@@ -18,6 +19,9 @@ app.use(cors());
 webRouter(app);
 // app.use("/api/users", userRoutes);
 // app.use("/api/auth", authRoutes);
+
+//setInterval
+// SetInterval.SetInterval;
 
 const port = process.env.PORT || 8000;
 app.listen(port, console.log(`Listening on port ${port}...`));
