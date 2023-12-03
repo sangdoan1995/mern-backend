@@ -87,9 +87,9 @@ const addReminder = async (req, res) => {
 
     try {
         const data = validation(req.body);
-        const { reminderMsg, remindAt, toEmail, userId } = req.body;
+        const { reminderMsg, remindAt, toEmail, token } = req.body;
         const reminder = new Reminder({
-            userId: req.body.userId,
+            userId: req.body.token,
             reminderMsg,
             remindAt,
             isReminded: false,

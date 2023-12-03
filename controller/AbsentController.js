@@ -77,7 +77,7 @@ const sendMail = async (req, res) => {
                 token: cryto.randomBytes(32).toString('hex')
             }).save()
 
-            const url = `${process.env.BASE_URL}absent/sendmail/${user.id}/verify/${tokenabsent.tokenabsent}`
+            const url = `${process.env.BASE_URL}absent/sendmail/${user.id}/verify/${tokenabsent.token}`
             const note = `"please verify on leave " ${url}`;
             const msg = user.staffName + " request on leave"
             const send = await sendEmail(msg, note);
