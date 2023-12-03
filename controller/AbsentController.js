@@ -72,7 +72,7 @@ const sendMail = async (req, res) => {
     try {
         const user = await AbsentDb.findOne({ id: req.params.id });
         if (user) {
-            tokenabsent = new TokenAbsentSchema({
+            const tokenabsent = await new TokenAbsentSchema({
                 userId: user._id,
                 token: cryto.randomBytes(32).toString('hex')
             }).save()
