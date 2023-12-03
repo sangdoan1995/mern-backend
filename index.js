@@ -3,8 +3,8 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const connection = require("./db");
-const webRouter = require("./routes/router")
-// const SetInterval = require("./controller/TodoController")
+const webRouter = require("./routes/router");
+const SendAuto = require("./controller/TodoController")
 require('dotenv').config()
 // database connection
 connection();
@@ -21,7 +21,9 @@ webRouter(app);
 // app.use("/api/auth", authRoutes);
 
 //setInterval
-// SetInterval.SetInterval;
+setInterval(() => {
+    SendAuto.SetInterval();
+}, 30000)
 
 const port = process.env.PORT || 8000;
 app.listen(port, console.log(`Listening on port ${port}...`));

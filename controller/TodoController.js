@@ -8,7 +8,7 @@ const nodemailer = require('nodemailer');
 
 const validation = (data) => {
     const schema = Joi.object({
-        token: Joi.string().required(),
+        userId: Joi.string().required(),
         reminderMsg: Joi.string().required().label("reminderMsg"),
         reminderAt: Joi.string().required().label("reminderAt"),
         toEmail: Joi.string().email().required().label("toEmail"),
@@ -46,37 +46,33 @@ const sendEmail = async (toEmail, msg, note) => {
     console.log(`Message sent `, mailOptions)
 }
 
+const SetInterval = async () => {
+
+    const reminderList = await Reminder.find();
+    if (reminderList) {
+        reminderList.forEach(async (reminder) => {
+            if (!reminder.isReminded) {
+                const now = new Date();
+                if ((new Date(reminder.remindAt) - now) <= 0) {
+                    // reminder send email
+                    const toEmail = reminder.toEmail;
+                    const msg = reminder.reminderMsg;
+                    const note = `Dear anh, \n Hiện tại tiến độ công việc đang chậm , nhờ anh hỗ trợ công tác đốc thúc để đẩy nhanh hồ sơ !!!. \n Em xin cảm ơn ạ.`;
+                    sendEmail(toEmail, msg, note);
+                    await Reminder.findByIdAndUpdate(reminder._id, { isReminded: true });
+                    console.log("Email reminder done send");
+                }
+
+            }
+        });
+    }
+
+};
+
+
 
 const getAllReminder = async (req, res) => {
-
-    const SetInterval = setInterval(async () => {
-        try {
-            const reminderList = await Reminder.find({ tokenId: req.params.token });
-            if (reminderList) {
-                reminderList.forEach(async (reminder) => {
-                    if (!reminder.isReminded) {
-                        const now = new Date();
-                        if ((new Date(reminder.remindAt) - now) <= 0) {
-                            // reminder send email
-                            const toEmail = reminder.toEmail;
-                            const msg = reminder.reminderMsg;
-                            const note = 'tình trạng tiến độ chậm trễ!!!';
-                            sendEmail(toEmail, msg, note);
-                            await Reminder.findByIdAndUpdate(reminder._id, { isReminded: true });
-                            console.log("Email reminder done send");
-                        }
-
-                    }
-                });
-            }
-
-        } catch (err) {
-            console.log(err)
-        }
-
-    }, 30000);
-
-    const reminder = await Reminder.find({ tokenId: req.params.token });
+    const reminder = await Reminder.find({ userId: req.params.id });
     if (reminder) {
         res.status(200).json(reminder);
     }
@@ -84,15 +80,16 @@ const getAllReminder = async (req, res) => {
         res.status(304).send([]);
         console.log("not reminder")
     };
+
 };
 
 const addReminder = async (req, res) => {
 
     try {
         const data = validation(req.body);
-        const { reminderMsg, remindAt, toEmail, token } = req.body;
+        const { reminderMsg, remindAt, toEmail, userId } = req.body;
         const reminder = new Reminder({
-            tokenId: req.body.token,
+            userId: req.body.userId,
             reminderMsg,
             remindAt,
             isReminded: false,
@@ -117,5 +114,5 @@ const deleteRemider = async (req, res) => {
     }
 };
 
-module.exports = { getAllReminder, addReminder, deleteRemider }
+module.exports = { getAllReminder, addReminder, deleteRemider, SetInterval }
 

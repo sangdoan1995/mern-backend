@@ -1,7 +1,8 @@
 const express = require('express');
 const controller = require("../controller/UserController");
 const authController = require("../controller/AuthController.js");
-const TodoController = require("../controller/TodoController.js")
+const TodoController = require("../controller/TodoController.js");
+const AbsentContrller = require("../controller/AbsentController.js")
 const router = express.Router();
 
 const webRouter = (app) => {
@@ -18,9 +19,15 @@ const webRouter = (app) => {
 
     router.post('/api/auth', authController.authLogin);
 
-    router.get('/getAllReminder/:token', TodoController.getAllReminder);
+    router.get('/getAllReminder/:id', TodoController.getAllReminder);
     router.post('/addReminder', TodoController.addReminder);
     router.post('/deleteReminder', TodoController.deleteRemider);
+
+    router.post('/absent/create', AbsentContrller.createAbsentUser);
+    router.get('/absent/sendmail/:id', AbsentContrller.getSendUser);
+    router.post('/absent/sendmail/:id', AbsentContrller.sendMail);
+    router.get('/absent/list', AbsentContrller.getAllAbsent);
+    router.post('/absent/sendmail/delete/:id', AbsentContrller.deleteAbsent)
 
 
     return app.use('/', router)

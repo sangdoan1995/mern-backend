@@ -2,8 +2,8 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const reminderSchema = new Schema({
-    tokenId: {
-        type: String,
+    userId: {
+        type: Schema.Types.ObjectId,
         required: true,
     },
     reminderMsg: { type: String, require: true },
