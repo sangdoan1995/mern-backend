@@ -106,7 +106,7 @@ const absentVerify = async (req, res) => {
         if (!token) {
             return res.status(400).send({ message: "Invalid link" });
         } else {
-            await absents.findByIdAndUpdate(absents._id, { verified: true });
+            await AbsentDb.findByIdAndUpdate(absents._id, { verified: true });
             await token.deleteOne();
 
             return res.status(200).send({ message: "Email verified successfully" });
