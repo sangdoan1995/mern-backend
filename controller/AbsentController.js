@@ -128,7 +128,7 @@ const getAllAbsent = async (req, res) => {
 
 const getDataTotal = async (req, res) => {
     try {
-        const dataTotal = await AbsentDb.findById({ userId: req.params.id });
+        const dataTotal = await AbsentDb.find({ userId: req.params.id });
         res.status(200).send(dataTotal)
 
     } catch (err) {
