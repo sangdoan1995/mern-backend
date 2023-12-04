@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const absentschema = new mongoose.Schema({
+    userId: { type: mongoose.Types.ObjectId, require: true },
     id: { type: Number, require: true },
     staffName: { type: String, require: true },
     daysleave: { type: String, require: true },
