@@ -125,6 +125,17 @@ const getAllAbsent = async (req, res) => {
         console.log(err)
     }
 }
+
+const getDataTotal = async (req, res) => {
+    try {
+        const dataTotal = await AbsentDb.findById({ userId: req.params.id });
+        res.status(200).send(dataTotal)
+
+    } catch (err) {
+        console.log(err);
+    }
+}
+
 const deleteAbsent = async (req, res) => {
     try {
         const DataAbsent = await AbsentDb.findOneAndDelete({ id: req.params.id });
@@ -133,4 +144,4 @@ const deleteAbsent = async (req, res) => {
         console.log(err)
     }
 }
-module.exports = { createAbsentUser, getSendUser, sendMail, getAllAbsent, deleteAbsent, absentVerify }
+module.exports = { createAbsentUser, getSendUser, sendMail, getAllAbsent, deleteAbsent, absentVerify, getDataTotal }

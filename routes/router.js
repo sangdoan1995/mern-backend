@@ -28,8 +28,8 @@ const webRouter = (app) => {
     router.post('/absent/sendmail/:id', AbsentContrller.sendMail);
     router.get('/absent/list', AbsentContrller.getAllAbsent);
     router.post('/absent/sendmail/delete/:id', AbsentContrller.deleteAbsent);
-    router.get('/absent/sendmail/:id/verify/:token', AbsentContrller.absentVerify)
-
+    router.get('/absent/sendmail/:id/verify/:token', AbsentContrller.absentVerify);
+    router.get('/absent/total/:id', AbsentContrller.getDataTotal);
 
     return app.use('/', router)
 }
