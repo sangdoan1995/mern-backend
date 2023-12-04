@@ -77,7 +77,7 @@ const sendMail = async (req, res) => {
                 token: cryto.randomBytes(32).toString('hex')
             }).save()
 
-            const url = `${process.env.BASE_URL}absent/sendmail/${user.id}/verify/${tokenabsent.token}`
+            const url = `${process.env.BASE_URL}absent/sendmail/${user._id}/verify/${tokenabsent.token}`
             const note = `"please verify on leave " ${url}`;
             const msg = user.staffName + " request on leave"
             const send = await sendEmail(msg, note);
@@ -93,6 +93,30 @@ const sendMail = async (req, res) => {
         console.log(err)
     }
 }
+
+const absentVerify = async (req, res) => {
+    try {
+        const absents = await AbsentDb.findOne({ _id: req.params.id });
+        if (!absents) return res.status(400).send({ message: "Invalid link" });
+
+        const token = await TokenAbsentSchema.findOne({
+            userId: absents._id,
+            token: req.params.token,
+        });
+        if (!token) {
+            return res.status(400).send({ message: "Invalid link" });
+        } else {
+            await absents.findByIdAndUpdate(absents._id, { verified: true });
+            await token.deleteOne();
+
+            return res.status(200).send({ message: "Email verified successfully" });
+        }
+
+    } catch (error) {
+        res.status(500).send({ message: "Internal Server Error", err: error.message });
+    }
+}
+
 const getAllAbsent = async (req, res) => {
     try {
         const dataGet = await AbsentDb.find();
@@ -109,4 +133,4 @@ const deleteAbsent = async (req, res) => {
         console.log(err)
     }
 }
-module.exports = { createAbsentUser, getSendUser, sendMail, getAllAbsent, deleteAbsent }
+module.exports = { createAbsentUser, getSendUser, sendMail, getAllAbsent, deleteAbsent, absentVerify }
