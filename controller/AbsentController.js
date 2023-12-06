@@ -1,10 +1,10 @@
+const { User } = require('../models/user')
 const { AbsentDb } = require('../models/absent');
 const { TokenAbsentSchema } = require('../models/TokenAbsent');
 const cryto = require('crypto');
 const Joi = require('joi');
 const nodemailer = require('nodemailer')
 const mailconfig = require('../config/mailConfig');
-const { TrustProductsEntityAssignmentsContextImpl } = require('twilio/lib/rest/trusthub/v1/trustProducts/trustProductsEntityAssignments');
 require('dotenv').config();
 
 // const validation = (data) => {
@@ -78,8 +78,8 @@ const sendMail = async (req, res) => {
             }).save()
 
             const url = `${process.env.BASE_URL}absent/sendmail/${user._id}/verify/${tokenabsent.token}`
-            const note = `"please verify on leave " ${url}`;
-            const msg = user.staffName + " request on leave"
+            const note = `Dear Anh \n Nhờ anh xác nhận nghỉ phép của ${user.staffName} qua đường link bên dưới!! \n ${url}`;
+            const msg = user.staffName + " GỬI XÁC NHẬN NGHỈ PHÉP"
             const send = await sendEmail(msg, note);
             console.log('email send to manager');
             res.status(201).send({
@@ -136,6 +136,44 @@ const getDataTotal = async (req, res) => {
     }
 }
 
+
+const postFreeDate = async (req, res) => {
+    const update = { $set: req.body }
+
+    try {
+        const totalDate = await User.findByIdAndUpdate({ _id: req.params.id }, update, { new: true });
+        res.status(200).send(totalDate)
+
+    } catch (err) {
+        console.log(err);
+        res.status(500).json(err)
+    }
+}
+
+const postTotalDate = async (req, res) => {
+    const update = { $set: req.body }
+    console.log(update)
+
+    try {
+        const totalDate = await User.findByIdAndUpdate({ _id: req.params.id }, update, { new: true });
+        res.status(200).send(totalDate)
+
+    } catch (err) {
+        console.log(err);
+        res.status(500).json(err)
+    }
+}
+
+const getTotalUser = async (req, res) => {
+    try {
+        const data = await User.findById({ _id: req.params.id });
+        res.status(200).send(data);
+
+    } catch (err) {
+        console.log(err);
+    }
+}
+
 const deleteAbsent = async (req, res) => {
     try {
         const DataAbsent = await AbsentDb.findOneAndDelete({ id: req.params.id });
@@ -144,4 +182,4 @@ const deleteAbsent = async (req, res) => {
         console.log(err)
     }
 }
-module.exports = { createAbsentUser, getSendUser, sendMail, getAllAbsent, deleteAbsent, absentVerify, getDataTotal }
+module.exports = { createAbsentUser, getSendUser, sendMail, getAllAbsent, deleteAbsent, absentVerify, getDataTotal, postFreeDate, postTotalDate, getTotalUser }
