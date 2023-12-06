@@ -57,7 +57,7 @@ const SetInterval = async () => {
                     // reminder send email
                     const toEmail = reminder.toEmail;
                     const msg = reminder.reminderMsg;
-                    const note = `Dear anh, \n Hiện tại tiến độ công việc đang chậm , nhờ anh hỗ trợ công tác đốc thúc để đẩy nhanh hồ sơ !!!. \n Em xin cảm ơn ạ.`;
+                    const note = `Dear Anh/Chị, \n` + reminder.content + `\n Best regard!.`;
                     sendEmail(toEmail, msg, note);
                     await Reminder.findByIdAndUpdate(reminder._id, { isReminded: true });
                     console.log("Email reminder done send");
@@ -87,13 +87,14 @@ const addReminder = async (req, res) => {
 
     try {
         const data = validation(req.body);
-        const { reminderMsg, remindAt, toEmail, token } = req.body;
+        const { reminderMsg, remindAt, toEmail, content, token } = req.body;
         const reminder = new Reminder({
             userId: req.body.token,
             reminderMsg,
             remindAt,
             isReminded: false,
-            toEmail
+            toEmail,
+            content
         });
         await reminder.save();
         res.status(201).json({ msg: "add success" })

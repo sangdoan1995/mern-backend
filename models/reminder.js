@@ -10,6 +10,7 @@ const reminderSchema = new Schema({
     remindAt: { type: String, require: true },
     isReminded: Boolean,
     toEmail: { type: String, require: true },
+    content: { type: String, require: true }
 }, { timestamps: true });
 
 module.exports = mongoose.model("reminder", reminderSchema);
